@@ -30,7 +30,7 @@ const PostList: React.FC = () => (
           <SkeletonLoader
             key={i}
             width="720px"
-            height="155px"
+            height="221px"
             background="rgba(0, 0, 0, 0.2)"
             style={{
               marginTop: '65px',
