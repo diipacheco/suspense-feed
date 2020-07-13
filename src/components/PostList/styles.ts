@@ -91,7 +91,7 @@ export const CommentsContainerList = styled.ul<CommentsContainerListProps>`
   max-width: 320px;
   list-style: none;
 
-  display: flex;
+  display: ${(props) => (props.isDisplayed ? 'flex' : 'none')};
   flex-direction: column;
 
   > li + li {

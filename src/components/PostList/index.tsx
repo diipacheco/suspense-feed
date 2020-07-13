@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Suspense, useState, useEffect } from 'react';
 import { FaReact } from 'react-icons/fa';
 import SkeletonLoader from 'tiny-skeleton-loader-react';
@@ -15,7 +16,7 @@ import {
 } from './styles';
 
 const postsResource = fetchPostsData();
-const commentsResource = fetchCommentsData(1);
+const commentsResource = fetchCommentsData();
 
 const PostList: React.FC = () => (
   <Container>
@@ -47,7 +48,7 @@ const PostListDetails: React.FC = () => {
   const posts = postsResource.posts.read();
   return (
     <List>
-      {posts?.map((post, index) => (
+      {posts?.map((post) => (
         <li
           key={post.id}
         >
@@ -62,11 +63,10 @@ const PostListDetails: React.FC = () => {
           <hr />
 
           <Suspense
-            fallback={<p>loading...</p>}
+            fallback={<span>loading comments...</span>}
           >
             <CommentDetails
               postId={post.id}
-              postIndex={index}
             />
           </Suspense>
         </li>
@@ -77,39 +77,48 @@ const PostListDetails: React.FC = () => {
 
 interface CommentDetailsProps {
   postId: number
-  postIndex: number
 }
 
-const CommentDetails: React.FC<CommentDetailsProps> = ({ postId, postIndex }) =>
-// // const [comments, setComments] = useState<Comment[] | undefined>([]);
+const CommentDetails: React.FC<CommentDetailsProps> = ({ postId }) => {
+  const [comments, setComments] = useState<Comment[] | undefined>([]);
+  const [isCommentsVisible, setCommentsVisible] = useState(false);
 
-// useEffect(() => {
-//   const commentsData = commentsResource.comments.read();
-//   console.log(commentsData);
-// });
+  useEffect(() => {
+    if (isCommentsVisible) {
+      const commentsData = commentsResource.comments.read();
+      const filtredComments = commentsData?.filter((comment) => comment.postId === postId);
+      setComments(filtredComments);
+    }
+  }, [isCommentsVisible, postId]);
 
-  (
+  return (
+    <>
+      <CommentsContainer>
+        <button
+          type="button"
+          onClick={() => setCommentsVisible(true)}
+        >
+          See comments
+        </button>
+      </CommentsContainer>
 
-    <CommentsContainer>
-      <button
-        type="button"
-        onClick={() => {}}
+      <CommentsContainerList
+        isDisplayed={isCommentsVisible}
       >
-        See comments
-      </button>
-    </CommentsContainer>
-
-  // {/* <CommentsContainerList>
-  //   <li
-  //     id="comment-listItem"
-  //     key={comment.id}
-  //   >
-  //     <h4>{comment.comment_author.email}</h4>
-  //     <p>{comment.body}</p>
-  //   </li>
-  // </CommentsContainerList> */}
+        {comments?.map((comment) => (
+          <li
+            id="comment-listItem"
+            key={comment.id}
+          >
+            <h4>{comment.comment_author.email}</h4>
+            <p>{comment.body}</p>
+          </li>
+        ))}
+      </CommentsContainerList>
+    </>
 
   );
+};
 CommentDetails.propTypes = {
   postId: number.isRequired,
 };

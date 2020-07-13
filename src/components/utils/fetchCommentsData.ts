@@ -11,8 +11,8 @@ export interface Comment {
   body: string
 }
 
-async function fetchComments(id: number) {
-  const response = await api.get<Comment[]>(`/comments?postId=${id}`);
+async function fetchComments() {
+  const response = await api.get<Comment[]>('/comments');
   return response.data;
 }
 
@@ -40,8 +40,8 @@ function wrapPromise(promise: Promise<Comment[]>) {
   };
 }
 
-export default function fetchCommentsData(id: number) {
-  const commentsPromise = fetchComments(id);
+export default function fetchCommentsData() {
+  const commentsPromise = fetchComments();
   return {
     comments: wrapPromise(commentsPromise),
   };
