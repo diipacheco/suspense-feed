@@ -1,24 +1,23 @@
-import api from '../../services/api';
+import api from '../services/api';
 
-export interface Comment {
-  postId: number
+export interface Post {
   id: number
-  comment_author: {
+  author: {
     id: number
-    email: string
-    avatar_url: string
+    name: string
   }
+  title: string
   body: string
 }
 
-async function fetchComments() {
-  const response = await api.get<Comment[]>('/comments');
+async function fetchPost() {
+  const response = await api.get<Post[]>('/posts');
   return response.data;
 }
 
-function wrapPromise(promise: Promise<Comment[]>) {
+function wrapPromise(promise: Promise<Post[]>) {
   let status = 'pending';
-  let result: Comment[] | undefined;
+  let result: Post[] | undefined;
   const suspender = promise.then((response) => {
     status = 'success';
     result = response;
@@ -40,9 +39,9 @@ function wrapPromise(promise: Promise<Comment[]>) {
   };
 }
 
-export default function fetchCommentsData() {
-  const commentsPromise = fetchComments();
+export default function fetchPostsData() {
+  const postsPromise = fetchPost();
   return {
-    comments: wrapPromise(commentsPromise),
+    posts: wrapPromise(postsPromise),
   };
 }

@@ -4,8 +4,8 @@ import { FaReact } from 'react-icons/fa';
 import SkeletonLoader from 'tiny-skeleton-loader-react';
 import { number } from 'prop-types';
 
-import fetchPostsData from '../utils/fetchPostsData';
-import fetchCommentsData, { Comment } from '../utils/fetchCommentsData';
+import fetchPostsData from '../../utils/fetchPostsData';
+import fetchCommentsData, { Comment } from '../../utils/fetchCommentsData';
 
 import {
   Container,
